@@ -15,30 +15,23 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // 1. Validasi input
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // 2. Cari user berdasarkan email
         $user = User::where('email', $request->email)->first();
 
-        // 3. Cek apakah user ada dan password benar
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Email atau password salah.'
             ], 401);
         }
 
-        // 4. Hapus token lama jika ingin (Opsional: agar 1 user hanya punya 1 token aktif)
         $user->tokens()->delete();
 
-        // 5. Buat token baru menggunakan Sanctum
-        // Kita simpan role di dalam token name agar mudah diidentifikasi
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // 6. Kembalikan respon sukses
         return response()->json([
             'message' => 'Login berhasil',
             'access_token' => $token,

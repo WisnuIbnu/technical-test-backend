@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\LeaveRequest;
 use App\Models\LeaveQuota;
-use App\Services\LeaveService; // Kita akan pakai service yang dibuat tadi
+use App\Services\LeaveService; 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 

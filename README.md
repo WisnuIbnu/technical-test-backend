@@ -1,59 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Employee Leave Management System (REST API & Admin Panel)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Manajemen Cuti Karyawan yang dirancang dengan Architecture menggunakan Laravel 12 dan Filament v3. Sistem ini mendukung operasional dua arah: melalui Admin Panel (Yang dibuat oleh Filament) untuk manajemen tingkat lanjut, dan REST API untuk karyawan dan Admin.
 
-## About Laravel
+## Arsitektur & Logika Sistem
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Untuk memenuhi kriteria sistem, Disini mengimplementasikan beberapa pola arsitektur:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Centralized Business Logic (Service Layer)
+Seluruh logika validasi kuota dan perhitungan durasi cuti dipusatkan pada `App\Services\LeaveService`. Hal ini menjamin konsistensi data, baik saat pengajuan dilakukan melalui REST API oleh Staff.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Event-Driven Data Integrity (Model Observers)
+Sistem menggunakan Eloquent Model Events (`booted`) pada model `LeaveRequest`.
+- **Auto-Quota Update**: Pengurangan kuota pada tabel `leave_quotas` terjadi secara otomatis hanya ketika status berubah menjadi `approved`.
+- Hal ini mencegah duplikasi logika di Controller dan memastikan integritas data tetap terjaga meskipun status diubah dari berbagai pintu (API maupun Web).
 
-## Learning Laravel
+### 3. Role-Based Access Control (RBAC)
+- **Admin**: Akses penuh ke Filament Dashboard, mampu mengelola semua data karyawan, dan melakukan eksekusi status melalui REST API.
+- **Staff**: Akses terbatas hanya pada data pribadi melalui REST API.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### DB STRUCTUR
+![db structure](https://github.com/WisnuIbnu/technical-test-backend/blob/main/public/db_structure.png?raw=true)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+### Routes
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Routes                                    | HTTP METHOD & Fungsi                          |
+| ----------------------------------------- | --------------------------------------------- |
+| **api/login** (Admin/Staff)               | (POST)| Login dengan mendapatkan Token Bearer |
+| **api/logout** (Admin/Staff)              | (POST)| Logout dan Revoke Token               |
+| **api/list-cuti** (Staff)                 | (GET) | Mendapatkan List Seluruh Cuti         |
+| **api/pengajuan-cuti** (Staff)            | (POST)| Mengajukan cuti + upload bukti        |
+| **api/admin/verifikasi-cuti/{id}/action** | (PUT) | Admin = Verifikasi Pengajuan Cuti     |
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Role Pengguna
 
-## Contributing
+Sistem memiliki dua peran utama:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1️⃣ Admin
 
-## Code of Conduct
+- Login
+- Verifikasi Pengajuan Cuti (Pending, Approve, Rejected) -> Default "Pending"
+- Kelola Kouta Cuti
+- Logout
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2️⃣ Staff/Pegawai
 
-## Security Vulnerabilities
+-:Login
+- Pengajuan Cuti, dengan data yang dikirim :
+    1. Tanggal mulai cuti (start_date)
+    2. Tanggal akhir cuti (end_date)
+    3. Alasan Cuti (reason)
+    4. Bukti -> PDF/JPG/PNG (attachment)
+    5. Durasi dihitung dari Tanggal mulai cuti - Tanggal akhir cuti
+- List Cuti Staff
+- Logout
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Panduan Instalasi & Setup
 
-## License
+### 1. Persiapan Lingkungan
+Pastikan Anda memiliki:
+- PHP >= 8.2
+- Composer
+- Filament 3
+- MySQL
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+### Instalasi
+
+Langkah-langkah berikut akan memandu Anda melalui proses instalasi untuk menjalankan aplikasi di lingkungan pengembangan secara lokal di mesin Anda:
+
+1. Kloning versi terbaru dari repositori
+2. Jalankan `composer install` untuk menginstal dependensi PHP yang dibutuhkan
+3. Salin file .env.example ke .env dan edit kredensial basis data sesuai dengan server basis data Anda, dengan mengetikan `cp .env.example .env`
+4. Jalankan `php artisan key:generate` untuk membuat kunci aplikasi baru
+5. Jalankan `php artisan migrate` untuk membuat tabel basis data. Anda juga dapat menambahkan flag `--seed` untuk mengisi basis data dengan beberapa data dummy
+6. Jalankan `php artisan serve` untuk memulai server pengembangan
+7. Buka terminal lain dan jalankan `npm install && npm run build` untuk menginstal modul node yang dibutuhkan
+8. Jalankan `npm run dev` untuk mengkompilasi aset untuk pengembangan
+9. Buka terminal dan jalankan `php artisan storage:link` untuk melihat aplikasi
+10. Buka browser Anda dan kunjungi `http://localhost:8000` untuk melihat aplikasi
+
+```bash
