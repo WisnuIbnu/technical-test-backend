@@ -24,13 +24,13 @@ Sistem menggunakan Eloquent Model Events (`booted`) pada model `LeaveRequest`.
 
 ### Routes
 
-| Routes                               | HTTP METHOD & Fungsi                          |
-| ------------------------------------ | --------------------------------------------- |
-| api/login (Admin/Staff)              | (POST)| Login dengan mendapatkan Token Bearer |
-| api/logout (Admin/Staff)             | (POST)| Logout dan Revoke Token               |
-| api/list-cuti (Staff)                | (GET) | Mendapatkan List Seluruh Cuti         |
-| api/pengajuan-cuti (Staff)           | (POST)| Mengajukan cuti + upload bukti        |
-| api/admin/verifikasi-cuti/{id}/action| (PUT) | Admin = Verifikasi Pengajuan Cuti     |
+| Routes                                     |HTTP METHOD & Fungsi                  |
+| -------------------------------------------|--------------------------------------|
+| api/login (Admin/Staff) (POST)             |Login dengan mendapatkan Token Bearer |
+| api/logout (Admin/Staff) (POST)            |Logout dan Revoke Token               |
+| api/list-cuti (Staff) (GET)                |Mendapatkan List Seluruh Cuti         |
+| api/pengajuan-cuti (Staff) (POST)          |Mengajukan cuti + upload bukti        |
+| api/admin/verifikasi-cuti/{id}/action (PUT)|Admin = Verifikasi Pengajuan Cuti     |
 
 
 ## Role Pengguna
