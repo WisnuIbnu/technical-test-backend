@@ -48,13 +48,11 @@ class User extends Authenticatable
         ];
     }
 
-    // User punya banyak pengajuan cuti
     public function leaveRequests()
     {
         return $this->hasMany(LeaveRequest::class);
     }
 
-    // User punya banyak kuota cuti (per tahun)
     public function leaveQuotas()
     {
         return $this->hasMany(LeaveQuota::class);

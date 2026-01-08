@@ -27,7 +27,6 @@ class LeaveRequest extends Model
     protected static function booted()
     {
         static::updated(function ($leaveRequest) {
-            // Jika status berubah menjadi 'approve'
             if ($leaveRequest->isDirty('status') && $leaveRequest->status === 'approve') {
                 
                 $quota = LeaveQuota::where('user_id', $leaveRequest->user_id)

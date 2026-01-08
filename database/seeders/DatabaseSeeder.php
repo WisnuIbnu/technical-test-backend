@@ -18,23 +18,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-       // 1. Buat Admin
+
         $admin = User::create([
             'name'     => 'Admin Ganteng',
             'email'    => 'admin@test.com',
-            'password' => Hash::make('password'), // password: password
+            'password' => Hash::make('password'),
             'role'     => 'Admin',
         ]);
 
-        // 2. Buat Staff
         $staff = User::create([
             'name'     => 'Staff Rajin',
             'email'    => 'staff@test.com',
-            'password' => Hash::make('password'), // password: password
+            'password' => Hash::make('password'),
             'role'     => 'Staff',
         ]);
 
-        // 3. Berikan Kuota Cuti untuk Staff (Tahun 2024 & 2025)
+
         LeaveQuota::create([
             'user_id'     => $staff->id,
             'year'        => 2025,
