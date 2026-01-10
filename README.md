@@ -80,3 +80,8 @@ Langkah-langkah berikut akan memandu Anda melalui proses instalasi untuk menjala
 8. Jalankan `npm run dev` untuk mengkompilasi aset untuk pengembangan
 9. Buka terminal dan jalankan `php artisan storage:link` 
 10. Buka browser Anda dan kunjungi `http://localhost:8000` untuk melihat aplikasi
+
+
+🔗 **Link Published Postman Documentation:**  
+👉 [https://documenter.getpostman.com/view/51334662/2sBXVfiBXw](https://documenter.getpostman.com/view/51334662/2sBXVfiBXw)
+
