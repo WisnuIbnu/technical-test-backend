@@ -1,6 +1,6 @@
-# Employee Leave Management System (REST API & Admin Panel)
+# Technical Test - SEAL
 
-Sistem Manajemen Cuti Karyawan yang dirancang dengan Architecture menggunakan Laravel 12 dan Filament v3. Sistem ini mendukung operasional dua arah: melalui Admin Panel (Yang dibuat oleh Filament) untuk manajemen tingkat lanjut, dan REST API untuk karyawan dan Admin.
+Ini adalah Technical Test untuk pendaftaran magang SEAL Batch 1 Tahun 2026 - Rest API Manajemen Cuti Karyawan yang dirancang dengan Architecture menggunakan Laravel 12 dan Filament v3. Sistem ini mendukung operasional dua arah: melalui Admin Panel (Yang dibuat oleh Filament) untuk manajemen tingkat lanjut, dan REST API untuk karyawan dan Admin.
 
 ## Link Published Postman Documentation:**  
 👉 [https://documenter.getpostman.com/view/51334662/2sBXVfiBXw](https://documenter.getpostman.com/view/51334662/2sBXVfiBXw)
@@ -16,7 +16,6 @@ Seluruh logika validasi kuota dan perhitungan durasi cuti dipusatkan pada `App\S
 ### 2. Event-Driven Data Integrity (Model Observers)
 Sistem menggunakan Eloquent Model Events (`booted`) pada model `LeaveRequest`.
 - **Auto-Quota Update**: Pengurangan kuota pada tabel `leave_quotas` terjadi secara otomatis hanya ketika status berubah menjadi `approved`.
-- Hal ini mencegah duplikasi logika di Controller dan memastikan integritas data tetap terjaga meskipun status diubah dari berbagai pintu (API maupun Web).
 
 ### 3. Role-Based Access Control (RBAC)
 - **Admin**: Akses penuh ke Filament Dashboard, mampu mengelola semua data karyawan, dan melakukan eksekusi status melalui REST API.
